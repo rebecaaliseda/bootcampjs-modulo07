@@ -1,13 +1,13 @@
 import { partida, States } from './modelo';
 
-export const getMessage = (state: States): string => {
+export const getMessage = (state: States, numPuntos: number): string => {
   let mensaje: string = '';
   switch (state) {
     case 'jugando':
       mensaje = 'Estás jugando';
       break;
     case 'plantado':
-      mensaje = obtenerMensajeTrasPlantarse();
+      mensaje = obtenerMensajeTrasPlantarse(numPuntos);
       break;
     case 'ganado':
       mensaje = '¡Lo has clavado! ¡Enhorabuena!';
@@ -79,27 +79,23 @@ export const crearURLCarta = (numCarta: number): string => {
   return rutaCarta;
 };
 
-export const obtenerMensajeTrasPlantarse = (): string => {
+export const obtenerMensajeTrasPlantarse = (numPuntos: number): string => {
   let txtMensaje: string = '';
-  if (partida.totalPuntosJugador <= 4.5) {
+  if (numPuntos <= 4.5) {
     txtMensaje = 'Has sido muy conservador....';
   }
-  if (partida.totalPuntosJugador >= 5) {
+  if (numPuntos >= 5) {
     txtMensaje = 'Te ha entrado el canguelo eh?';
   }
-  if (partida.totalPuntosJugador >= 6) {
+  if (numPuntos >= 6) {
     txtMensaje = 'Casi, casi ...';
   }
   return txtMensaje;
 };
 
-export const obtenerPuntuacionJugador = () => {
-  return partida.totalPuntosJugador;
-};
-
-export const comprobarPartida = (): States => {
-  if (obtenerPuntuacionJugador() === 7.5) {
+export const comprobarPartida = (puntos: number): States => {
+  if (puntos === 7.5) {
     return 'ganado';
   }
-  return obtenerPuntuacionJugador() > 7.5 ? 'gameOver' : 'jugando';
+  return puntos > 7.5 ? 'gameOver' : 'jugando';
 };

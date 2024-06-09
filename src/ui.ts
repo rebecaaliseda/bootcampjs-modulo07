@@ -7,6 +7,7 @@ import {
   sumarPuntuacionTotal,
   crearURLCarta,
   obtenerNumAleatorio,
+  comprobarPartida,
 } from './motor';
 
 export const cartasJugador = document.getElementById('cartas');
@@ -47,7 +48,7 @@ export const pedirCarta = (): void => {
   if (cartasJugador && cartasJugador instanceof HTMLDivElement) {
     muestraCarta(carta, cartasJugador);
   }
-  comprobarPuntuacion();
+  comprobarEstadoPartida(partida.totalPuntosJugador);
 };
 
 export const finPartidaButtons = (): void => {
@@ -61,16 +62,15 @@ export const gameOverButtons = (): void => {
   desactivarBoton('si-hubieras-seguido');
 };
 
-export const comprobarPuntuacion = (): void => {
-  if (partida.totalPuntosJugador === 7.5) {
-    setEstadoPartida('ganado');
-    setMensaje(getMessage(partida.estadoPartida));
+export const comprobarEstadoPartida = (puntos: number): void => {
+  const estadoPartida = comprobarPartida(puntos);
+  setEstadoPartida(estadoPartida);
+  setMensaje(getMessage(partida.estadoPartida, puntos));
+  if (partida.estadoPartida === 'ganado') {
     mostrarMensajeFinal(partida.mensaje);
     finPartidaButtons();
   }
-  if (partida.totalPuntosJugador > 7.5) {
-    setEstadoPartida('gameOver');
-    setMensaje(getMessage(partida.estadoPartida));
+  if (partida.estadoPartida === 'gameOver') {
     mostrarMensajeFinal(partida.mensaje);
     gameOverButtons();
   }
@@ -128,7 +128,7 @@ export const mePlantoButtons = (): void => {
 export const mePlanto = (): void => {
   mePlantoButtons();
   setEstadoPartida('plantado');
-  setMensaje(getMessage(partida.estadoPartida));
+  setMensaje(getMessage(partida.estadoPartida, partida.totalPuntosJugador));
   mostrarMensajeFinal(partida.mensaje);
 };
 
